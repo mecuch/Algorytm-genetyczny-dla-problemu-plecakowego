@@ -1,13 +1,15 @@
+import random
 from random import randint
 
 
-class KnapsackProblemAG():
+class KnapsackProblemAG:
     def __init__(self,num_of_individ: int, num_of_items: int, weight_items: list, value_items: list, load_capacity):
         self.num_of_individ = num_of_individ
         self.num_of_items = num_of_items
         self.weight_items = weight_items
         self.value_items = value_items
         self.load_capacity = load_capacity
+        self.population = self.gen_individuals()
 
     def gen_individuals(self):
         population = []
@@ -24,27 +26,38 @@ class KnapsackProblemAG():
         items_v = {i: w for i, w in enumerate(self.value_items)}
         return items_v
 
-    def calculate_individuals(self):
-        population = self.gen_individuals()
+    def fitness(self):
         items_w = self.gen_items_weight()
         items_v = self.gen_items_value()
-        weight_individ = []
-        value_individ = []
-        for individual in population:
+        fitness_individ = []
+        for individual in self.population:
             weight = 0
             value = 0
             for index, gene in enumerate(individual):
                 if gene == 1:
                     weight += items_w[index]
                     value += items_v[index]
-            weight_individ.append(weight)
-            value_individ.append(value)
 
-        return weight_individ, value_individ
+            if weight > self.load_capacity:
+                fitness_individ.append(0)
+            else:
+                fitness_individ.append(value)
+
+        return fitness_individ
+
+    def roulette_wheel_selection(self):
+        fitness = self.fitness()
+        F = sum(fitness)
+        r = random.randint(0, F-1)
+        suma = 0
+        for i in range(len(fitness)):
+            suma += fitness[i]
+            if suma >= r:
+                return i, self.population[i]
 
 
-test = KnapsackProblemAG(10, 5, [3,1,6,4,2], [4,1,8,5,2], 50)
-test_ind = test.gen_individuals()
-test_items = test.gen_items_weight()
-test_calcu = test.calculate_individuals()
-print(test_calcu)
+
+test = KnapsackProblemAG(10, 5, [3,8,6,4,2], [4,1,8,5,2], 10)
+test_calcu = test.fitness()
+test_roulette = test.roulette_wheel_selection()
+print(test_roulette)
