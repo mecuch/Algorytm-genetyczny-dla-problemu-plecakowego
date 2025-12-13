@@ -10,7 +10,7 @@ class SimpleApp(tk.Tk):
         super().__init__()
 
         self.title("Problem Plecakowy - AG")
-        self.center_window(700, 340)
+        self.center_window(520, 340)
         self.resizable(False, False)
 
         # ====== Warunek stopu ======
