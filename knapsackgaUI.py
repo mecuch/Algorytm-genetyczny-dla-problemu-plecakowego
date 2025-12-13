@@ -41,43 +41,38 @@ class SimpleApp(tk.Tk):
 
         # Rząd 1
         ttk.Label(frame_input, text="Liczba przedmiotów").grid(row=0, column=0, padx=5, sticky="w")
-        self.entry_num_items = ttk.Entry(frame_input, width=6)
+        self.entry_num_items = ttk.Entry(frame_input, width=5)
         self.entry_num_items.grid(row=0, column=1, padx=5, sticky="w")
 
         ttk.Label(frame_input, text="Liczba osobników").grid(row=0, column=2, padx=5, sticky="w")
-        self.entry_num_individ = ttk.Entry(frame_input, width=6)
+        self.entry_num_individ = ttk.Entry(frame_input, width=5)
         self.entry_num_individ.grid(row=0, column=3, padx=5, sticky="w")
 
         # Rząd 2
-        ttk.Label(frame_input, text="Wagi (np. 3,5,1,8)").grid(row=1, column=0, padx=5, sticky="w")
-        self.entry_weights = ttk.Entry(frame_input, width=24)
-        self.entry_weights.grid(row=1, column=1, padx=5, sticky="w")
+        ttk.Label(frame_input, text="Wagi przedmiotów").grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.entry_weights = ttk.Entry(frame_input, width=15)
+        self.entry_weights.grid(row=1, column=1, padx=5, pady=5, sticky="w")
 
-        ttk.Label(frame_input, text="Wartości (np. 2,3,4,5)").grid(row=1, column=2, padx=5, sticky="w")
-        self.entry_values = ttk.Entry(frame_input, width=24)
-        self.entry_values.grid(row=1, column=3, padx=5, sticky="w")
+        ttk.Label(frame_input, text="Wartości przedmiotów").grid(row=1, column=2, padx=5, pady=5, sticky="w")
+        self.entry_values = ttk.Entry(frame_input, width=15)
+        self.entry_values.grid(row=1, column=3, padx=5, pady=5, sticky="w")
 
         # Rząd 3
-        ttk.Label(frame_input, text="Maks. udźwig").grid(row=2, column=0, padx=5, sticky="w")
-        self.entry_capacity = ttk.Entry(frame_input, width=6)
-        self.entry_capacity.grid(row=2, column=1, padx=5, sticky="w")
+        ttk.Label(frame_input, text="Maks. udźwig").grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.entry_capacity = ttk.Entry(frame_input, width=5)
+        self.entry_capacity.grid(row=2, column=1, padx=5, pady=5, sticky="w")
 
-        ttk.Label(frame_input, text="Stagnacja X (gdy wybrano 2)").grid(row=2, column=2, padx=5, sticky="w")
-        self.entry_max_stagnation = ttk.Entry(frame_input, width=6)
-        self.entry_max_stagnation.grid(row=2, column=3, padx=5, sticky="w")
+        ttk.Label(frame_input, text="Liczba prób (generacji)").grid(row=2, column=2, padx=5, pady=5, sticky="w")
+        self.entry_max_stagnation = ttk.Entry(frame_input, width=5)
+        self.entry_max_stagnation.grid(row=2, column=3, padx=5, pady=5, sticky="w")
 
-        # Rząd 4
-        ttk.Label(frame_input, text="Liczba generacji (gdy wybrano 1)").grid(row=3, column=0, padx=5, sticky="w")
-        self.entry_generations = ttk.Entry(frame_input, width=6)
-        self.entry_generations.grid(row=3, column=1, padx=5, sticky="w")
-
-        ttk.Label(frame_input, text="P(krzyżowania) (opcjonalnie)").grid(row=3, column=2, padx=5, sticky="w")
+        ttk.Label(frame_input, text="Prawdop. krzyżowania").grid(row=3, column=0, padx=5, pady=5, sticky="w")
         self.entry_pc = ttk.Entry(frame_input, width=6)
-        self.entry_pc.grid(row=3, column=3, padx=5, sticky="w")
+        self.entry_pc.grid(row=3, column=1, padx=5, pady=5, sticky="w")
 
-        ttk.Label(frame_input, text="P(mutacji) (opcjonalnie)").grid(row=4, column=2, padx=5, sticky="w")
+        ttk.Label(frame_input, text="Prawdop. mutacji ").grid(row=3, column=2, padx=5, sticky="w")
         self.entry_pm = ttk.Entry(frame_input, width=6)
-        self.entry_pm.grid(row=4, column=3, padx=5, sticky="w")
+        self.entry_pm.grid(row=3, column=3, padx=5, sticky="w")
 
         # ====== Przycisk ======
         self.button = ttk.Button(self, text="Uruchom algorytm", command=self.on_button_click)
@@ -140,7 +135,6 @@ class SimpleApp(tk.Tk):
         self.entry_values.insert(0, "2,3,4,5,6,7")
         self.entry_capacity.insert(0, "14")
         self.entry_max_stagnation.insert(0, "50")
-        self.entry_generations.insert(0, "50")
         self.entry_pc.insert(0, "0.8")
         self.entry_pm.insert(0, "0.2")
 
@@ -152,9 +146,6 @@ class SimpleApp(tk.Tk):
             values = self.parse_list_of_ints(self.entry_values.get())
             capacity = self._parse_int(self.entry_capacity, "Maks. udźwig")
             max_stagnation = self._parse_int(self.entry_max_stagnation, "Stagnacja X")
-            generations = self._parse_int(self.entry_generations, "Liczba generacji")
-
-            # opcjonalnie (GUI pozwala wpisać, ale Twoja klasa może mieć Pc/Pm na stałe)
             pc = self._parse_float_optional(self.entry_pc)
             pm = self._parse_float_optional(self.entry_pm)
 
@@ -175,8 +166,8 @@ class SimpleApp(tk.Tk):
                 weight_items=weights,
                 value_items=values,
                 load_capacity=capacity,
-                pc=0.8,
-                pm=0.2,
+                pc=pc,
+                pm=pm,
                 stop_numb=stop_numb,
                 stop_stag=stop_stag
             )
