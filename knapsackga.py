@@ -4,13 +4,15 @@ from random import randint
 
 class KnapsackProblemAG:
     def __init__(self, num_of_individ: int, num_of_items: int,
-                 weight_items: list, value_items: list, load_capacity: int, max_stagnation: int,
+                 weight_items: list, value_items: list, load_capacity: int, pc: float, pm: float, max_stagnation: int,
                  stop_numb: bool, stop_stag: bool):
         self.num_of_individ = num_of_individ
         self.num_of_items = num_of_items
         self.weight_items = weight_items
         self.value_items = value_items
         self.load_capacity = load_capacity
+        self.pc = pc
+        self.pm = pm
         self.max_stagnation = max_stagnation
         self.stop_numb = stop_numb
         self.stop_stag = stop_stag
@@ -71,11 +73,10 @@ class KnapsackProblemAG:
 
     def crossover(self):
         parent1, parent2 = self.pick_parents()
-        Pc = 0.8
         u = random.random()  # float z [0,1)
         point = randint(1, self.num_of_items - 1)  # 1..n-1
 
-        if u >= Pc:
+        if u >= self.pc:
             child1 = parent1[:]
             child2 = parent2[:]
         else:
@@ -84,10 +85,10 @@ class KnapsackProblemAG:
 
         return child1, child2
 
-    def mutate_individual(self, individual, Pm: float = 0.2):
+    def mutate_individual(self, individual):
         for i in range(len(individual)):
             u = random.uniform(0.0, 1.0)
-            if u < Pm:
+            if u < self.pm:
                 individual[i] = 1 - individual[i]
         return individual
 
@@ -132,7 +133,6 @@ class KnapsackProblemAG:
 
             self.next_generation()
 
-        # po zakończeniu zwracamy najlepsze znalezione rozwiązanie
         final_fitness = self.fitness()
         best_idx = final_fitness.index(max(final_fitness))
         return self.population[best_idx], max(final_fitness)
@@ -158,6 +158,8 @@ test = KnapsackProblemAG(
     weight_items=[3,5,1,8,9,4],
     value_items=[2,3,4,5,6,7],
     load_capacity=14,
+    pc = 0.8,
+    pm = 0.2,
     stop_numb=True,
     stop_stag=False
 )
